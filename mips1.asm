@@ -61,8 +61,8 @@ XtoY:				#we need for(int i = 0 ; i<sizeof(array) ; i++)
 StartSort:
 	addi $s0,$zero,0 	#s0= 0 / i = 0
 	 
-	addi $s2,$t3,0		#base address of Y
-	addi $s3,$t1,-2
+	addi $s6,$t3,0		#base address of Y	s2->s6
+	addi $s3,$t1,-1
 	OuterLoop:
 		beq $s0,$s3,Exit
 		addi $s1,$zero,0  	#s1 = 0 / j= 0
@@ -70,9 +70,10 @@ StartSort:
 		addi $t4,$t4,-1
 		InnerLoop:
 			beq $t4,$s1,Innerloopend
-			add $t5,$s2,$s1		#t5 get &arr[j]
-			lw $t6 ,0($t5)
-			lw $t7,4($t5)
+			sll $t2,$s1,2
+			add $t2,$s6,$t2		#t2 get &arr[j]
+			lw $t6 ,0($t2)
+			lw $t7,4($t2)
 			slt $s4,$t6,$t7
 			beq $s4,$zero,swap
 			
@@ -83,9 +84,10 @@ StartSort:
 			
 			
 			swap:
-				lw $s5, 0($t6) 
-				sw $t7, 0($t6)
-				sw $s5 ,0($t7)
+				
+				move $s5, $t6 
+				sw $t7, 0($t2)
+				sw $s5 ,4($t2)
 				j increments
 			
 			
